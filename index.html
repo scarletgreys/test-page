@@ -79,7 +79,7 @@
                     event.preventDefault();
                     const param = getParameters();
                     const formData = new FormData(event.target);
-                    const payload = "";
+                    let payload = "";
 
                     formData.forEach((value, key) => {
                         payload += `${key}=${value}&`;
