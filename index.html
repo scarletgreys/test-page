@@ -47,12 +47,12 @@
             const fetchOptions = {
                 method: httpMethod.toUpperCase(),
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/x-www-form-urlencoded' // Keep as form-encoded
                 }
             };
 
-            if (httpMethod.toUpperCase() === 'POST') {
-                fetchOptions.body = payload;
+            if (httpMethod.toUpperCase() === 'POST' && payload) {
+                fetchOptions.body = payload; // Send the string directly
             }
 
             fetch(trackerApiUrl, fetchOptions)
@@ -82,13 +82,11 @@
                     let payload = "";
 
                     formData.forEach((value, key) => {
-                        payload += `${key}=${value}&`;
+                        payload += `${key}=${value}&`
                     });
-                    
-                    payload = payload.slice(0, -1)
+                    payload = payload.slice(0, -1);
 
                     if (param[0] && param[1]) {
-                        console.log(payload)
                         sendToTrackerAPI('POST', param[0], 'fill', param[1], payload);
                     } else {
                         console.error('URL Not Completed.');
