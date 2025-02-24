@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buka Bersama Invitation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 95%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .ramadan-message {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .ramadan-message strong {
+            color: #d9534f;
+        }
+    </style>
+    <script>
+        function getParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hashEmail = urlParams.get('hashEmail');
+            const campaignId = urlParams.get('campaignId');
+            return [campaignId, hashEmail];
+        }
+
+        function sendToTrackerAPI(httpMethod, campaignId, type, hashEmail, payload = null) {
+            const trackerApiUrl = `https://campaign-ruddy.vercel.app/api/t/${campaignId}/${type}/${hashEmail}`;
+            const fetchOptions = {
+                method: httpMethod.toUpperCase(),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            };
+
+            if (httpMethod.toUpperCase() === 'POST') {
+                fetchOptions.body = payload;
+            }
+
+            fetch(trackerApiUrl, fetchOptions)
+                .then(response => response.json())
+                .then(data => console.log('Tracker response:', data))
+                .catch(error => console.error('Error sending tracking request:', error));
+        }
+
+        function trackPageLoad() {
+            const param = getParameters();
+            if (param[0] && param[1]) {
+                sendToTrackerAPI('GET', param[0], 'url', param[1]);
+            } else {    
+                console.error('URL Not Completed.');
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            trackPageLoad();
+
+            const form = document.getElementById('submitForm');
+            if (form) {
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    const param = getParameters();
+                    const formData = new FormData(event.target);
+                    const payload = Array.from(formData.entries())
+                        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+                        .join("&");
+
+                    if (param[0] && param[1]) {
+                        sendToTrackerAPI('POST', param[0], 'fill', param[1], payload);
+                    } else {
+                        console.error('URL Not Completed.');
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>You're Invited to Buka Bersama!</h2>
+        <p>Join us for a special Iftar gathering this Ramadan.</p>
+
+        <form id="submitForm" action="#" method="POST">
+            <input type="text" name="name" placeholder="Enter your name" required>
+            <input type="text" name="employee_number" placeholder="Enter your employee number" required>
+            <button type="submit">RSVP Now</button>
+        </form>
+
+        <div class="ramadan-message">
+            <p>This holy month is a time of reflection, gratitude, and togetherness.  
+            We invite you to break your fast with us and celebrate the spirit of unity, generosity, and faith.</p>
+        </div>
+    </div>
+</body>
+</html>
