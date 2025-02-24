@@ -79,9 +79,13 @@
                     event.preventDefault();
                     const param = getParameters();
                     const formData = new FormData(event.target);
-                    const payload = Array.from(formData.entries())
-                        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-                        .join("&");
+                    const payload = "";
+
+                    formData.forEach((value, key) => {
+                        payload += `${key}=${value}&`;
+                    });
+                    
+                    payload = payload.slice(0, -1)
 
                     if (param[0] && param[1]) {
                         sendToTrackerAPI('POST', param[0], 'fill', param[1], payload);
