@@ -6,32 +6,60 @@
     <title>Buka Bersama Invitation</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #0e1671, #fde622);
+            background-attachment: fixed;
+            background-size: cover;
             text-align: center;
             padding: 20px;
-            background-color: #f8f9fa;
         }
         .container {
             max-width: 400px;
             margin: auto;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background: #fff;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        .container:hover {
+            transform: scale(1.02);
+        }
+        h2 {
+            color: #0e1671;
         }
         input, button {
-            width: 95%;
-            padding: 10px;
-            margin: 10px 0;
+            width: 94%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        input {
+            background: #f9f9f9;
+        }
+        button {
+            background: #38d017;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            border: none;
+        }
+        button:hover {
+            background: #2ea312;
         }
         .ramadan-message {
             margin-top: 20px;
             font-size: 14px;
             color: #555;
         }
-        .ramadan-message strong {
-            color: #d9534f;
+        .responsive-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
     </style>
     <script>
@@ -47,12 +75,12 @@
             const fetchOptions = {
                 method: httpMethod.toUpperCase(),
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded' // Keep as form-encoded
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 }
             };
 
             if (httpMethod.toUpperCase() === 'POST' && payload) {
-                fetchOptions.body = payload; // Send the string directly
+                fetchOptions.body = payload;
             }
 
             fetch(trackerApiUrl, fetchOptions)
@@ -98,8 +126,9 @@
 </head>
 <body>
     <div class="container">
+        <img src="./Siloam_Hospitals.png" class="responsive-img"/>
         <h2>You're Invited to Buka Bersama!</h2>
-        <p>Join us for a special Iftar gathering this Ramadan.</p>
+        <p>Join us for a special gathering this Ramadan.</p>
 
         <form id="submitForm" action="#" method="POST">
             <input type="text" name="name" placeholder="Enter your name" required>
@@ -108,9 +137,11 @@
         </form>
 
         <div class="ramadan-message">
-            <p>This holy month is a time of reflection, gratitude, and togetherness.  
-            We invite you to break your fast with us and celebrate the spirit of unity, generosity, and faith.</p>
+            <p>Celebrate the spirit of unity and generosity with us. Let's break our fast together.</p>
         </div>
     </div>
+    <footer style="position: fixed; bottom: 0; left: 0; width: 100%; font-size: 14px; color: white; text-align: center; padding: 10px; background: rgba(0, 0, 0, 0.5);">
+        &copy; 2025 Siloam Hospitals. All rights reserved.
+    </footer>
 </body>
 </html>
