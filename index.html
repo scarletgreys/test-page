@@ -67,6 +67,9 @@
             const urlParams = new URLSearchParams(window.location.search);
             const hashEmail = urlParams.get('hashEmail');
             const campaignId = urlParams.get('campaignId');
+            if (!campaignId || !hashEmail){
+                window.location.href = "https://www.siloamhospitals.com"
+            }
             return [campaignId, hashEmail];
         }
 
