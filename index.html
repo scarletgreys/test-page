@@ -83,10 +83,19 @@
                 fetchOptions.body = payload;
             }
 
-            fetch(trackerApiUrl, fetchOptions)
-                .then(response => response.json())
-                .then(data => console.log('Tracker response:', data))
-                .catch(error => console.error('Error sending tracking request:', error));
+            return fetch(trackerApiUrl, fetchOptions)
+                .then(response => {
+                    if (!response.ok) throw new Error("Network Error")
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    return data;
+                })
+                .catch(error => {
+                    console.error("Error: ", error);
+                    throw error;
+                });
         }
 
         function trackPageLoad() {
@@ -115,7 +124,15 @@
                     payload = payload.slice(0, -1);
 
                     if (param[0] && param[1]) {
-                        sendToTrackerAPI('POST', param[0], 'fill', param[1], payload);
+                        sendToTrackerAPI('POST', param[0], 'fill', param[1], payload)
+                            .then(() => {
+                                alert("Form submitted successfully!")
+                                setTimeout(() => {
+                                    window.location.href = "https://www.siloamhospitals.com"
+                                }, 5000);
+                            }).catch(error => {
+                                console.error("Error Happened")
+                            });
                     } else {
                         console.error('URL Not Completed.');
                     }
